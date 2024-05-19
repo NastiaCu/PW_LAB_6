@@ -1,3 +1,4 @@
+// src/pages/Register.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
@@ -9,24 +10,21 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState('user');  
+  const [role, setRole] = useState('user');
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/register', {
+      await axios.post('http://localhost:8000/register', {
         username,
         password,
         email,
         full_name: fullName,
         role,
       });
-      if (response.data && response.data.access_token) {
-        await login(username, password);
-      } else {
-        throw new Error('Invalid response from server');
-      }
+      await login(username, password);
+      console.log('Registered and logged in successfully');
     } catch (err) {
       console.error('Error during registration:', err);
       if (axios.isAxiosError(err) && err.response) {
@@ -36,7 +34,6 @@ const Register: React.FC = () => {
       }
     }
   };
-  
 
   return (
     <Container>

@@ -12,7 +12,8 @@ const Login: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      await login(username, password); 
+      await login(username, password);
+      console.log('Logged in successfully');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<{ detail: string }>;

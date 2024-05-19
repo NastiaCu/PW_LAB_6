@@ -14,8 +14,9 @@ import { useTheme } from '../hooks/useTheme';
 
 interface CalorieLog {
   id: number;
-  logged_date: string;
-  calories_consumed: number;
+  date: string;
+  food_item: string;
+  calories: number;
 }
 
 const CalorieTrackerPage: React.FC = () => {
@@ -47,12 +48,17 @@ const CalorieTrackerPage: React.FC = () => {
 
   const handleAddCalorieLog = async () => {
     const today = new Date().toISOString().split('T')[0];
-    const caloriesConsumed = prompt('Enter calories consumed for today:');
-    if (caloriesConsumed !== null) {
+    const foodItem = prompt('Enter food description for today:');
+    const calories = prompt('Enter calories consumed for today:');
+    if (foodItem !== null && calories !== null) {
       try {
         setLoading(true);
         setError(null);
-        await createCalorieLog(token!, { logged_date: today, calories_consumed: parseFloat(caloriesConsumed) });
+        await createCalorieLog(token!, { 
+          date: today, 
+          food_item: foodItem, 
+          calories: parseFloat(calories) 
+        });
         await loadCalorieLogs();
       } catch (err) {
         setError('Failed to add calorie log');
@@ -78,8 +84,8 @@ const CalorieTrackerPage: React.FC = () => {
         {calorieLogs.map((log) => (
           <ListItem key={log.id}>
             <ListItemText
-              primary={`Date: ${log.logged_date}`}
-              secondary={`Calories: ${log.calories_consumed}`}
+              primary={`Date: ${log.date}`}
+              secondary={`Food: ${log.food_item}, Calories: ${log.calories}`}
             />
           </ListItem>
         ))}
