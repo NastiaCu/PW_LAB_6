@@ -30,7 +30,7 @@ const Login: React.FC = () => {
   return (
     <Container>
       <Box mt={4}>
-        <Paper elevation={3} style={{ padding: '20px' }}>
+        <Paper elevation={3} style={{ padding: '20px', borderRadius:'10px' }}>
           <Typography variant="h4" gutterBottom>
             Login
           </Typography>

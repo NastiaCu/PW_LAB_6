@@ -23,6 +23,7 @@ interface CalorieLog {
 const CalorieTrackerPage: React.FC = () => {
   const { token, logout } = useAuth();
   const [calorieLogs, setCalorieLogs] = useState<CalorieLog[]>([]);
+  const [totalCaloriesToday, setTotalCaloriesToday] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -39,11 +40,19 @@ const CalorieTrackerPage: React.FC = () => {
       const today = new Date().toISOString().split('T')[0];
       const response = await getCalorieLogs(token!, today);
       setCalorieLogs(response.data);
+      calculateTotalCalories(response.data);
     } catch (err) {
       setError('Failed to load calorie logs');
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculateTotalCalories = (logs: CalorieLog[]) => {
+    const today = new Date().toISOString().split('T')[0];
+    const filteredLogs = logs.filter(log => log.date === today);
+    const totalCalories = filteredLogs.reduce((total, log) => total + log.calories, 0);
+    setTotalCaloriesToday(totalCalories);
   };
 
   const handleAddCalorieLog = async () => {
@@ -71,7 +80,7 @@ const CalorieTrackerPage: React.FC = () => {
   return (
     <Container>
       <Box mt={4}>
-        <Paper elevation={3} style={{ padding: '20px' }}>
+        <Paper elevation={3} style={{ padding: '20px', borderRadius:'10px' }}>
           <Typography variant="h4" gutterBottom>
             Calorie Tracker
           </Typography>
@@ -80,6 +89,7 @@ const CalorieTrackerPage: React.FC = () => {
           <Button onClick={handleAddCalorieLog} color="primary">
             Add Calorie Log
           </Button>
+          <Typography variant="h6">Total Calories Today: {totalCaloriesToday}</Typography>
           <List>
             {calorieLogs.map((log) => (
               <ListItem key={log.id}>

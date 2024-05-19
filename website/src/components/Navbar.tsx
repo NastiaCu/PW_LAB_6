@@ -1,12 +1,14 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
+import ModeNightIcon from '@mui/icons-material/ModeNight';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
-  const { toggleTheme } = useTheme();
+  const { toggleTheme, theme } = useTheme();
 
   return (
     <AppBar position="static">
@@ -17,9 +19,10 @@ const Navbar: React.FC = () => {
         <Button color="inherit" component={Link} to="/">
           Home
         </Button>
-        <Button color="inherit" onClick={toggleTheme} style={{ marginRight: '10px' }}>
-            Toggle Theme
-        </Button>
+        <IconButton color="inherit" onClick={toggleTheme} style={{ marginRight: '10px' }}>
+            {theme.palette.mode === 'dark' ? <LightModeIcon /> : <ModeNightIcon />}
+        </IconButton>
+
         {isAuthenticated ? (
           <>
             <Button color="inherit" component={Link} to="/profile">
