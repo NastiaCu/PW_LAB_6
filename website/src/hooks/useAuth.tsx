@@ -1,6 +1,6 @@
-// src/hooks/useAuth.ts
 import { useState, useContext, createContext, ReactNode } from 'react';
 import axios from 'axios';
+// import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   token: string | null;
@@ -14,6 +14,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+  // const navigate = useNavigate();
 
   const login = async (username: string, password: string) => {
     const response = await axios.post('http://localhost:8000/token', new URLSearchParams({
@@ -25,6 +26,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       localStorage.setItem('token', response.data.access_token);
       setToken(response.data.access_token);
       setIsAuthenticated(true);
+      // navigate('/');
     } else {
       throw new Error('Login failed');
     }
@@ -34,6 +36,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('token');
     setToken(null);
     setIsAuthenticated(false);
+    // navigate('/login');
   };
 
   return (

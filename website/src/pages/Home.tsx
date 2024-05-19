@@ -9,8 +9,9 @@ import {
   ListItem,
   ListItemText,
   CircularProgress,
+  Paper,
+  Box,
 } from '@mui/material';
-import { useTheme } from '../hooks/useTheme';
 
 interface CalorieLog {
   id: number;
@@ -21,7 +22,6 @@ interface CalorieLog {
 
 const CalorieTrackerPage: React.FC = () => {
   const { token, logout } = useAuth();
-  const { toggleTheme } = useTheme();
   const [calorieLogs, setCalorieLogs] = useState<CalorieLog[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -54,10 +54,10 @@ const CalorieTrackerPage: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        await createCalorieLog(token!, { 
-          date: today, 
-          food_item: foodItem, 
-          calories: parseFloat(calories) 
+        await createCalorieLog(token!, {
+          date: today,
+          food_item: foodItem,
+          calories: parseFloat(calories)
         });
         await loadCalorieLogs();
       } catch (err) {
@@ -70,26 +70,28 @@ const CalorieTrackerPage: React.FC = () => {
 
   return (
     <Container>
-      <Typography variant="h4">Calorie Tracker</Typography>
-      {loading && <CircularProgress />}
-      {error && <Typography color="error">{error}</Typography>}
-      <Button onClick={toggleTheme}>Toggle Theme</Button>
-      <Button onClick={logout} color="secondary">
-        Logout
-      </Button>
-      <Button onClick={handleAddCalorieLog} color="primary">
-        Add Calorie Log
-      </Button>
-      <List>
-        {calorieLogs.map((log) => (
-          <ListItem key={log.id}>
-            <ListItemText
-              primary={`Date: ${log.date}`}
-              secondary={`Food: ${log.food_item}, Calories: ${log.calories}`}
-            />
-          </ListItem>
-        ))}
-      </List>
+      <Box mt={4}>
+        <Paper elevation={3} style={{ padding: '20px' }}>
+          <Typography variant="h4" gutterBottom>
+            Calorie Tracker
+          </Typography>
+          {loading && <CircularProgress />}
+          {error && <Typography color="error">{error}</Typography>}
+          <Button onClick={handleAddCalorieLog} color="primary">
+            Add Calorie Log
+          </Button>
+          <List>
+            {calorieLogs.map((log) => (
+              <ListItem key={log.id}>
+                <ListItemText
+                  primary={`Date: ${log.date}`}
+                  secondary={`Food: ${log.food_item}, Calories: ${log.calories}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+      </Box>
     </Container>
   );
 };

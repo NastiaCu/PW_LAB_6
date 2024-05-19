@@ -1,8 +1,8 @@
-// src/pages/Register.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
-import { TextField, Button, Container, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { TextField, Button, Container, Typography, Select, MenuItem, FormControl, InputLabel, Box, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const { login } = useAuth();
@@ -12,6 +12,7 @@ const Register: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState('user');
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -23,6 +24,7 @@ const Register: React.FC = () => {
         full_name: fullName,
         role,
       });
+      navigate('/login');
       await login(username, password);
       console.log('Registered and logged in successfully');
     } catch (err) {
@@ -35,53 +37,61 @@ const Register: React.FC = () => {
     }
   };
 
-  return (
-    <Container>
-      <Typography variant="h4">Register</Typography>
-      {error && <Typography color="error">{error}</Typography>}
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-          fullWidth
-        />
-        <TextField
-          label="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          fullWidth
-        />
-        <TextField
+return (
+  <Container>
+    <Box mt={4}>
+      <Paper elevation={3} style={{ padding: '20px' }}>
+        <Typography variant="h4" gutterBottom>
+          Register
+        </Typography>
+        {error && <Typography color="error">{error}</Typography>}
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
           label="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           fullWidth
-        />
-        <TextField
-          label="Full Name"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          fullWidth
-        />
-        <FormControl fullWidth required>
-          <InputLabel>Role</InputLabel>
-          <Select
-            value={role}
-            onChange={(e) => setRole(e.target.value as string)}
-          >
-            <MenuItem value="user">User</MenuItem>
-            <MenuItem value="admin">Admin</MenuItem>
-          </Select>
-        </FormControl>
-        <Button type="submit" variant="contained" color="primary">
-          Register
-        </Button>
-      </form>
+          margin="normal"
+          />
+          <TextField
+            label="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <FormControl fullWidth required margin="normal">
+            <InputLabel>Role</InputLabel>
+            <Select
+              value={role}
+              onChange={(e) => setRole(e.target.value as string)}
+            >
+              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+            </Select>
+          </FormControl>
+          <Button type="submit" variant="contained" color="primary">
+            Register
+          </Button>
+          </form>
+        </Paper>
+      </Box>
     </Container>
   );
 };
